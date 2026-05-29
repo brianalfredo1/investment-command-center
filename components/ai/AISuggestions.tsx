@@ -94,7 +94,7 @@ export function AISuggestions({ positions }: Props) {
             Click "Analyze My Portfolio" to get AI-powered insights
           </p>
           <p style={{ color: "#4a5568", fontSize: "0.75rem", fontFamily: "var(--font-dm-mono)", marginTop: "0.375rem" }}>
-            Requires ANTHROPIC_API_KEY in .env.local
+            Requires GEMINI_API_KEY in .env.local
           </p>
         </div>
       )}

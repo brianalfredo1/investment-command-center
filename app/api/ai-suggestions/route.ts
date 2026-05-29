@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import Anthropic from "@anthropic-ai/sdk";
-
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+import { getModel } from "@/lib/gemini/client";
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,8 +19,8 @@ export async function POST(req: NextRequest) {
       platform: p.platform,
       cost_basis: `$${Number(p.cost_basis).toFixed(2)}`,
       current_value: `$${Number(p.current_value).toFixed(2)}`,
-      roi_pct: p.cost_basis > 0
-        ? `${(((p.current_value - p.cost_basis) / p.cost_basis) * 100).toFixed(1)}%`
+      roi_pct: Number(p.cost_basis) > 0
+        ? `${(((Number(p.current_value) - Number(p.cost_basis)) / Number(p.cost_basis)) * 100).toFixed(1)}%`
         : "N/A",
       status: p.status,
     }));
@@ -38,23 +36,24 @@ Portfolio Summary:
 Positions:
 ${JSON.stringify(summary, null, 2)}
 
-Respond with HTML (no <html>/<body> tags, just inner content) covering:
-1. <h3>Portfolio Health Summary</h3> — overall performance assessment
+Respond with HTML (no <html>/<body> tags, just inner content) covering exactly these five sections:
+1. <h3>Portfolio Health Summary</h3> — overall performance assessment with key metrics
 2. <h3>Concentration Risks</h3> — over-weighted positions or categories
-3. <h3>Diversification Gaps</h3> — missing asset classes or sectors
-4. <h3>Rebalancing Suggestions</h3> — specific % targets for each category
-5. <h3>Top 3 Next Steps</h3> — actionable bullet points
+3. <h3>Diversification Gaps</h3> — missing asset classes or underrepresented sectors
+4. <h3>Rebalancing Suggestions</h3> — specific percentage targets for each category
+5. <h3>Top 3 Next Steps</h3> — concrete, actionable bullet points
 
-Use <p>, <ul>, <li>, <strong>, <span class="green"> for positive metrics and <span class="red"> for negative metrics.
-Be specific, data-driven, and concise.`;
+Use <p>, <ul>, <li>, <strong> tags.
+Use <span class="green"> for positive metrics and <span class="red"> for negative metrics.
+Be specific, data-driven, and concise. Do not wrap the response in markdown code fences.`;
 
-    const response = await client.messages.create({
-      model: "claude-opus-4-5",
-      max_tokens: 2000,
-      messages: [{ role: "user", content: prompt }],
-    });
+    const model = getModel("gemini-1.5-flash");
+    const result = await model.generateContent(prompt);
+    const html = result.response.text()
+      .replace(/```html\s*/gi, "")
+      .replace(/```/g, "")
+      .trim();
 
-    const html = response.content[0].type === "text" ? response.content[0].text : "<p>No analysis available</p>";
     return NextResponse.json({ html });
   } catch (e) {
     console.error("AI suggestions error:", e);
