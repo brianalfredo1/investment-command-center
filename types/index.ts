@@ -1,17 +1,11 @@
-export type PositionCategory =
-  | "stocks"
-  | "crypto"
-  | "etf"
-  | "real_estate"
-  | "bonds"
-  | "cash"
-  | "other";
-
-export type PositionStatus = "active" | "closed" | "pending";
+export type PositionCategory = "Crypto" | "Stocks" | "ETF" | "Real Estate" | "Bonds" | "Trading" | "Business" | "Other";
+export type PositionStatus = "Active" | "Closed" | "Pending";
 
 export interface Position {
   id: string;
+  user_id: string;
   name: string;
+  subtitle: string;
   category: PositionCategory;
   cost_basis: number;
   current_value: number;
@@ -19,9 +13,8 @@ export interface Position {
   status: PositionStatus;
   platform: string;
   notes?: string;
-  user_id: string;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface PortfolioMetrics {
@@ -30,4 +23,14 @@ export interface PortfolioMetrics {
   overall_roi: number;
   profitable_count: number;
   total_positions: number;
+}
+
+export interface ExtractedPosition {
+  name: string;
+  sub: string;
+  category: PositionCategory;
+  source: string;
+  initial: number;
+  current: number;
+  status: PositionStatus;
 }
