@@ -47,7 +47,7 @@ Use <p>, <ul>, <li>, <strong> tags.
 Use <span class="green"> for positive metrics and <span class="red"> for negative metrics.
 Be specific, data-driven, and concise. Do not wrap the response in markdown code fences.`;
 
-    const model = getModel("gemini-1.5-flash");
+    const model = getModel("gemini-2.5-flash");
     const result = await model.generateContent(prompt);
     const html = result.response.text()
       .replace(/```html\s*/gi, "")

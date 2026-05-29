@@ -6,7 +6,7 @@ export async function POST(req: NextRequest) {
     const { image, mediaType = "image/jpeg" } = await req.json();
     if (!image) return NextResponse.json({ error: "No image provided" }, { status: 400 });
 
-    const model = getModel("gemini-1.5-flash");
+    const model = getModel("gemini-2.5-flash");
 
     const prompt = `You are a financial data extractor. Analyze this screenshot of an investment portfolio app and extract ALL investment positions shown.
 
