@@ -15,18 +15,39 @@ export function MetricCard({ label, value, sub, positive, negative, accent }: Me
       background: "#111417",
       border: "1px solid #1e2329",
       borderRadius: "12px",
-      padding: "1.25rem 1.5rem",
+      padding: "1rem 1.25rem",
       display: "flex",
       flexDirection: "column",
-      gap: "0.375rem",
+      gap: "0.25rem",
     }}>
-      <span style={{ color: "#7c8794", fontSize: "0.75rem", fontFamily: "var(--font-syne)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+      <span className="metric-label" style={{
+        color: "#7c8794",
+        fontSize: "0.7rem",
+        fontFamily: "var(--font-syne)",
+        textTransform: "uppercase",
+        letterSpacing: "0.08em",
+      }}>
         {label}
       </span>
-      <span style={{ color: valueColor, fontSize: "1.625rem", fontFamily: "var(--font-dm-mono)", fontWeight: 500, lineHeight: 1 }}>
+      <span className="metric-value" style={{
+        color: valueColor,
+        fontSize: "1.5rem",
+        fontFamily: "var(--font-dm-mono)",
+        fontWeight: 500,
+        lineHeight: 1.1,
+        wordBreak: "break-all",
+      }}>
         {value}
       </span>
-      {sub && <span style={{ color: "#7c8794", fontSize: "0.75rem", fontFamily: "var(--font-dm-mono)" }}>{sub}</span>}
+      {sub && (
+        <span style={{
+          color: positive ? "#00b87f" : negative ? "#cc3d56" : "#7c8794",
+          fontSize: "0.7rem",
+          fontFamily: "var(--font-dm-mono)",
+        }}>
+          {sub}
+        </span>
+      )}
     </div>
   );
 }

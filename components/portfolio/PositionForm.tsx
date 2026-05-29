@@ -72,7 +72,7 @@ export function PositionForm({ initial, onSubmit, onCancel }: Props) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 1rem" }}>
+      <div className="form-grid">
         {field("Ticker / Name", "name", "text", "BTC")}
         {field("Full Name", "subtitle", "text", "Bitcoin")}
         <div style={{ marginBottom: "1rem" }}>

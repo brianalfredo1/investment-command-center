@@ -51,75 +51,72 @@ export default function Dashboard() {
   }, [addPosition]);
 
   const TABS: { id: Tab; label: string }[] = [
-    { id: "portfolio", label: "Portfolio" },
-    { id: "ai-import", label: "AI Import" },
+    { id: "portfolio",      label: "Portfolio" },
+    { id: "ai-import",      label: "AI Import" },
     { id: "ai-suggestions", label: "AI Suggestions" },
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: "#0a0c0f", color: "#f0f2f5", padding: "0 0 3rem" }}>
-      <style>{`@keyframes pulse { 0%,100% { opacity:.5 } 50% { opacity:1 } }`}</style>
+    <div style={{ minHeight: "100vh", background: "#0a0c0f", color: "#f0f2f5" }}>
+      <style>{`
+        @keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
+      `}</style>
 
-      {/* Header */}
-      <header style={{
-        background: "#0a0c0f",
-        borderBottom: "1px solid #1e2329",
-        padding: "0 2rem",
-        position: "sticky", top: 0, zIndex: 40,
-      }}>
-        <div style={{ maxWidth: "1400px", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: "64px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.625rem" }}>
-            <span style={{ color: "#00e5a0", fontSize: "1.125rem", fontWeight: 800 }}>◈</span>
-            <span style={{ fontFamily: "var(--font-syne)", fontWeight: 800, fontSize: "1rem", letterSpacing: "-0.01em", color: "#f0f2f5" }}>
-              Investment Command Center
-            </span>
+      {/* ── Header ── */}
+      <header style={{ background: "#0a0c0f", borderBottom: "1px solid #1e2329", position: "sticky", top: 0, zIndex: 40 }}>
+        <div className="app-header-inner">
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", minWidth: 0 }}>
+            <span style={{ color: "#00e5a0", fontSize: "1.1rem", fontWeight: 800, flexShrink: 0 }}>◈</span>
+            <span className="app-header-title">Investment Command Center</span>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
-            {error && <span style={{ color: "#ff4d6d", fontSize: "0.75rem", fontFamily: "var(--font-dm-mono)" }}>⚠ {error}</span>}
-            <button onClick={refetch} style={{ background: "none", border: "1px solid #1e2329", borderRadius: "6px", color: "#7c8794", cursor: "pointer", padding: "5px 12px", fontSize: "0.75rem", fontFamily: "var(--font-syne)" }}>
-              ↺ Refresh
-            </button>
+          <div className="app-header-actions">
+            {error && <span style={{ color: "#ff4d6d", fontSize: "0.7rem", fontFamily: "var(--font-dm-mono)", display: "none" }} className="error-badge">⚠</span>}
+            <button onClick={refetch} style={{
+              background: "none", border: "1px solid #1e2329", borderRadius: "6px",
+              color: "#7c8794", cursor: "pointer", padding: "5px 10px",
+              fontSize: "0.7rem", fontFamily: "var(--font-syne)", whiteSpace: "nowrap",
+            }}>↺ Refresh</button>
             <button onClick={() => setShowAdd(true)} style={{
               background: "#00e5a0", border: "none", borderRadius: "8px",
-              color: "#0a0c0f", padding: "0.45rem 1.1rem", cursor: "pointer",
+              color: "#0a0c0f", padding: "0.45rem 1rem", cursor: "pointer",
               fontFamily: "var(--font-syne)", fontWeight: 700, fontSize: "0.8rem",
-              display: "flex", alignItems: "center", gap: "0.3rem",
-            }}>
-              + Add Position
-            </button>
+              whiteSpace: "nowrap",
+            }}>+ Add</button>
           </div>
         </div>
       </header>
 
-      <main style={{ maxWidth: "1400px", margin: "0 auto", padding: "1.75rem 2rem 0" }}>
+      <main className="app-main">
 
-        {/* Tab Nav */}
-        <div style={{ display: "flex", gap: "0", borderBottom: "1px solid #1e2329", marginBottom: "1.75rem" }}>
+        {/* ── Tab Nav ── */}
+        <div className="tab-nav">
           {TABS.map(t => (
             <button key={t.id} onClick={() => setTab(t.id)} style={{
               background: "none", border: "none", cursor: "pointer",
-              padding: "0.625rem 1.25rem",
+              padding: "0.625rem 1.1rem",
               fontFamily: "var(--font-syne)", fontWeight: 600, fontSize: "0.85rem",
               color: tab === t.id ? "#00e5a0" : "#7c8794",
               borderBottom: `2px solid ${tab === t.id ? "#00e5a0" : "transparent"}`,
-              marginBottom: "-1px",
-              transition: "all 0.15s",
+              marginBottom: "-1px", transition: "all 0.15s",
+              whiteSpace: "nowrap", flexShrink: 0,
             }}>{t.label}</button>
           ))}
         </div>
 
-        {/* ── PORTFOLIO TAB ── */}
+        {/* ══════════════════════════════════════
+            PORTFOLIO TAB
+        ══════════════════════════════════════ */}
         {tab === "portfolio" && (
           <>
             {/* Metric Cards */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1rem", marginBottom: "1.5rem" }}>
+            <div className="metrics-grid">
               {loading ? (
                 Array(4).fill(0).map((_, i) => (
-                  <div key={i} style={{ height: "90px", background: "#111417", borderRadius: "12px", border: "1px solid #1e2329", animation: "pulse 1.5s ease-in-out infinite" }} />
+                  <div key={i} style={{ height: "88px", background: "#111417", borderRadius: "12px", border: "1px solid #1e2329", animation: "pulse 1.5s ease-in-out infinite" }} />
                 ))
               ) : (
                 <>
-                  <MetricCard label="Total Invested" value={fmt(metrics.total_invested)} accent />
+                  <MetricCard label="Total Invested"    value={fmt(metrics.total_invested)} accent />
                   <MetricCard
                     label="Current Value"
                     value={fmt(metrics.current_value)}
@@ -134,7 +131,7 @@ export default function Dashboard() {
                     negative={metrics.overall_roi < 0}
                   />
                   <MetricCard
-                    label="Profitable Positions"
+                    label="Profitable"
                     value={`${metrics.profitable_count} / ${metrics.total_positions}`}
                     sub={metrics.total_positions > 0 ? `${((metrics.profitable_count / metrics.total_positions) * 100).toFixed(0)}% win rate` : undefined}
                     positive={metrics.profitable_count > 0}
@@ -145,15 +142,15 @@ export default function Dashboard() {
 
             {/* Charts */}
             {!loading && positions.length > 0 && (
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 380px", gap: "1rem", marginBottom: "1.5rem" }}>
-                <div style={{ background: "#111417", border: "1px solid #1e2329", borderRadius: "12px", padding: "1.25rem 1.5rem" }}>
-                  <h3 style={{ fontFamily: "var(--font-syne)", fontWeight: 700, fontSize: "0.8rem", color: "#7c8794", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 1rem" }}>ROI by Position</h3>
+              <div className="charts-grid">
+                <div style={{ background: "#111417", border: "1px solid #1e2329", borderRadius: "12px", padding: "1.25rem 1.25rem 1rem" }}>
+                  <h3 style={{ fontFamily: "var(--font-syne)", fontWeight: 700, fontSize: "0.75rem", color: "#7c8794", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 0.875rem" }}>ROI by Position</h3>
                   <div style={{ height: "220px" }}>
                     <ROIBarChart positions={positions} />
                   </div>
                 </div>
-                <div style={{ background: "#111417", border: "1px solid #1e2329", borderRadius: "12px", padding: "1.25rem 1.5rem" }}>
-                  <h3 style={{ fontFamily: "var(--font-syne)", fontWeight: 700, fontSize: "0.8rem", color: "#7c8794", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 1rem" }}>Allocation by Category</h3>
+                <div style={{ background: "#111417", border: "1px solid #1e2329", borderRadius: "12px", padding: "1.25rem 1.25rem 1rem" }}>
+                  <h3 style={{ fontFamily: "var(--font-syne)", fontWeight: 700, fontSize: "0.75rem", color: "#7c8794", textTransform: "uppercase", letterSpacing: "0.08em", margin: "0 0 0.875rem" }}>Allocation by Category</h3>
                   <div style={{ height: "220px" }}>
                     <AllocationDonut positions={positions} />
                   </div>
@@ -163,8 +160,8 @@ export default function Dashboard() {
 
             {/* Positions Table */}
             <div style={{ background: "#111417", border: "1px solid #1e2329", borderRadius: "12px", overflow: "hidden" }}>
-              <div style={{ padding: "1rem 1.25rem", borderBottom: "1px solid #1e2329", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <h3 style={{ fontFamily: "var(--font-syne)", fontWeight: 700, fontSize: "0.8rem", color: "#7c8794", textTransform: "uppercase", letterSpacing: "0.08em", margin: 0 }}>
+              <div style={{ padding: "0.875rem 1.1rem", borderBottom: "1px solid #1e2329", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <h3 style={{ fontFamily: "var(--font-syne)", fontWeight: 700, fontSize: "0.75rem", color: "#7c8794", textTransform: "uppercase", letterSpacing: "0.08em", margin: 0 }}>
                   All Positions ({positions.length})
                 </h3>
               </div>
@@ -173,57 +170,57 @@ export default function Dashboard() {
                   Loading positions…
                 </div>
               ) : (
-                <PositionTable
-                  positions={positions}
-                  onEdit={setEditTarget}
-                  onDelete={deletePosition}
-                />
+                <div className="positions-table-wrap">
+                  <PositionTable
+                    positions={positions}
+                    onEdit={setEditTarget}
+                    onDelete={deletePosition}
+                  />
+                </div>
               )}
             </div>
           </>
         )}
 
-        {/* ── AI IMPORT TAB ── */}
+        {/* ══════════════════════════════════════
+            AI IMPORT TAB
+        ══════════════════════════════════════ */}
         {tab === "ai-import" && (
-          <div style={{ background: "#111417", border: "1px solid #1e2329", borderRadius: "12px", padding: "1.75rem" }}>
-            <div style={{ marginBottom: "1.5rem" }}>
-              <h2 style={{ fontFamily: "var(--font-syne)", fontWeight: 800, fontSize: "1.1rem", color: "#f0f2f5", margin: "0 0 0.375rem" }}>
+          <div className="ai-panel" style={{ background: "#111417", border: "1px solid #1e2329", borderRadius: "12px", padding: "1.75rem" }}>
+            <div style={{ marginBottom: "1.25rem" }}>
+              <h2 style={{ fontFamily: "var(--font-syne)", fontWeight: 800, fontSize: "1rem", color: "#f0f2f5", margin: "0 0 0.375rem" }}>
                 AI Screenshot Import
               </h2>
               <p style={{ color: "#7c8794", fontSize: "0.8rem", fontFamily: "var(--font-dm-mono)", margin: 0 }}>
-                Upload a screenshot from any investment app. Claude will extract all positions automatically.
+                Upload a screenshot from any investment app. Gemini will extract all positions automatically.
               </p>
             </div>
             <ScreenshotImport onImport={handleImport} />
           </div>
         )}
 
-        {/* ── AI SUGGESTIONS TAB ── */}
+        {/* ══════════════════════════════════════
+            AI SUGGESTIONS TAB
+        ══════════════════════════════════════ */}
         {tab === "ai-suggestions" && (
-          <div style={{ background: "#111417", border: "1px solid #1e2329", borderRadius: "12px", padding: "1.75rem" }}>
+          <div className="ai-panel" style={{ background: "#111417", border: "1px solid #1e2329", borderRadius: "12px", padding: "1.75rem" }}>
             <AISuggestions positions={positions} />
           </div>
         )}
+
       </main>
 
       {/* Add Modal */}
       {showAdd && (
         <Modal title="Add Position" onClose={() => setShowAdd(false)}>
-          <PositionForm
-            onSubmit={handleAdd}
-            onCancel={() => setShowAdd(false)}
-          />
+          <PositionForm onSubmit={handleAdd} onCancel={() => setShowAdd(false)} />
         </Modal>
       )}
 
       {/* Edit Modal */}
       {editTarget && (
         <Modal title={`Edit — ${editTarget.name}`} onClose={() => setEditTarget(null)}>
-          <PositionForm
-            initial={editTarget}
-            onSubmit={handleEdit}
-            onCancel={() => setEditTarget(null)}
-          />
+          <PositionForm initial={editTarget} onSubmit={handleEdit} onCancel={() => setEditTarget(null)} />
         </Modal>
       )}
     </div>
