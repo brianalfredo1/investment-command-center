@@ -25,32 +25,40 @@ export async function POST(req: NextRequest) {
       status: p.status,
     }));
 
-    const prompt = `You are a sharp investment advisor. Analyze this portfolio and respond in SHORT, DIRECT bullets only. No long explanations. No paragraphs. Just the point.
+    const prompt = `You are a blunt investment advisor. Be extremely concise.
 
-Portfolio Summary:
-- Total Invested: $${totalInvested.toFixed(2)}
-- Current Value: $${totalCurrent.toFixed(2)}
-- Overall ROI: ${roi}%
-- Positions: ${portfolio.length}
+Portfolio data:
+- Invested: $${totalInvested.toFixed(2)} | Current: $${totalCurrent.toFixed(2)} | ROI: ${roi}%
+${summary.map(p => `- ${p.asset}: cost ${p.cost_basis} → ${p.current_value} (${p.roi_pct})`).join("\n")}
 
-Positions:
-${JSON.stringify(summary, null, 2)}
+Return HTML only. No paragraphs. No explanations. Just short bullets.
+Each bullet must be under 12 words.
 
-Format your response as HTML with these exact 4 sections:
+Use exactly this structure:
 
-<h3>⚠️ What's hurting you</h3>
-<ul> 3-4 bullet points max, each under 15 words </ul>
+<h3>⚠️ Hurting you</h3>
+<ul>
+<li>...</li> (max 3 bullets)
+</ul>
 
-<h3>✅ What's working</h3>
-<ul> 2-3 bullet points max, each under 15 words </ul>
+<h3>✅ Working</h3>
+<ul>
+<li>...</li> (max 2 bullets)
+</ul>
 
-<h3>🎯 What to do next</h3>
-<ul> 3 specific actions, each under 15 words </ul>
+<h3>🎯 Do this now</h3>
+<ul>
+<li>...</li> (exactly 3 actions)
+</ul>
 
 <h3>📊 Target allocation</h3>
-<ul> list each asset class with a % target, one line each </ul>
+<ul>
+<li>BTC: X%</li>
+<li>ETH: X%</li>
+(one line per asset class)
+</ul>
 
-Be brutal and specific. Use asset names. No fluff. No intros. No conclusions. Do not wrap the response in markdown code fences.`;
+No intro. No conclusion. No paragraphs. Bullets only. Asset names only, no full names. Do not wrap in markdown code fences.`;
 
     const model = getModel("gemini-2.5-flash");
     const result = await model.generateContent(prompt);
