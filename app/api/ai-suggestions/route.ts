@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
 Portfolio data:
 - Invested: $${totalInvested.toFixed(2)} | Current: $${totalCurrent.toFixed(2)} | ROI: ${roi}%
-${summary.map(p => `- ${p.asset}: cost ${p.cost_basis} → ${p.current_value} (${p.roi_pct})`).join("\n")}
+${summary.map((p: { asset: string; cost_basis: string; current_value: string; roi_pct: string }) => `- ${p.asset}: cost ${p.cost_basis} → ${p.current_value} (${p.roi_pct})`).join("\n")}
 
 Return HTML only. No paragraphs. No explanations. Just short bullets.
 Each bullet must be under 12 words.
