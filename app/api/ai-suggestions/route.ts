@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       status: p.status,
     }));
 
-    const prompt = `You are a senior portfolio analyst. Analyze this investment portfolio and provide actionable insights.
+    const prompt = `You are a sharp investment advisor. Analyze this portfolio and respond in SHORT, DIRECT bullets only. No long explanations. No paragraphs. Just the point.
 
 Portfolio Summary:
 - Total Invested: $${totalInvested.toFixed(2)}
@@ -36,16 +36,21 @@ Portfolio Summary:
 Positions:
 ${JSON.stringify(summary, null, 2)}
 
-Respond with HTML (no <html>/<body> tags, just inner content) covering exactly these five sections:
-1. <h3>Portfolio Health Summary</h3> — overall performance assessment with key metrics
-2. <h3>Concentration Risks</h3> — over-weighted positions or categories
-3. <h3>Diversification Gaps</h3> — missing asset classes or underrepresented sectors
-4. <h3>Rebalancing Suggestions</h3> — specific percentage targets for each category
-5. <h3>Top 3 Next Steps</h3> — concrete, actionable bullet points
+Format your response as HTML with these exact 4 sections:
 
-Use <p>, <ul>, <li>, <strong> tags.
-Use <span class="green"> for positive metrics and <span class="red"> for negative metrics.
-Be specific, data-driven, and concise. Do not wrap the response in markdown code fences.`;
+<h3>⚠️ What's hurting you</h3>
+<ul> 3-4 bullet points max, each under 15 words </ul>
+
+<h3>✅ What's working</h3>
+<ul> 2-3 bullet points max, each under 15 words </ul>
+
+<h3>🎯 What to do next</h3>
+<ul> 3 specific actions, each under 15 words </ul>
+
+<h3>📊 Target allocation</h3>
+<ul> list each asset class with a % target, one line each </ul>
+
+Be brutal and specific. Use asset names. No fluff. No intros. No conclusions. Do not wrap the response in markdown code fences.`;
 
     const model = getModel("gemini-2.5-flash");
     const result = await model.generateContent(prompt);
